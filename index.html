@@ -2,9 +2,9 @@
 <html lang="id">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#123b35"><title>LJK MASTER</title>
+<meta name="theme-color" content="#123b35"><title>LJK MASTER · AI Vision</title>
 <style>
-:root{--green:#123b35;--green2:#1e6255;--bg:#f3f6f5;--ink:#182522;--muted:#71807b;--line:#dce5e1;--white:#fff;--gold:#e9b949}
+:root{--green:#123b35;--green2:#1e6255;--bg:#f3f6f5;--ink:#182522;--muted:#71807b;--line:#dce5e1;--white:#fff;--gold:#e9b949;--ai:#2563eb;--ai-bg:#eff6ff}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,system-ui,Arial,sans-serif}
 header{background:var(--green);color:white;padding:18px max(18px,calc((100% - 1180px)/2));display:flex;align-items:center;justify-content:space-between;gap:16px}
 .brand{display:flex;align-items:center;gap:12px}.logo{width:42px;height:42px;border:2px solid #a8d5c6;border-radius:12px;display:grid;place-items:center;font-weight:900}.brand h1{font-size:18px;margin:0}.brand small{color:#c3d8d1}
@@ -12,9 +12,11 @@ header{background:var(--green);color:white;padding:18px max(18px,calc((100% - 11
 .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}.tab{border:1px solid var(--line);background:white;padding:10px 15px;border-radius:10px;cursor:pointer;font-weight:650;color:#52635d}.tab.active{background:var(--green);color:white;border-color:var(--green)}
 .panel{display:none}.panel.active{display:block}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}.card{background:white;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 4px 18px #173d3010}.span8{grid-column:span 8}.span4{grid-column:span 4}.span6{grid-column:span 6}.span12{grid-column:span 12}
 h2{font-size:21px;margin:0 0 5px}h3{font-size:16px;margin:0 0 12px}.muted{color:var(--muted)}.metric{font-size:30px;font-weight:800;color:var(--green);margin-top:8px}
-label{display:block;font-weight:650;font-size:13px;margin:12px 0 5px}input,select{width:100%;padding:11px 12px;border:1px solid #cbd8d2;border-radius:9px;font:inherit;background:white}button{border:0;border-radius:10px;padding:11px 15px;background:var(--green);color:white;font:inherit;font-weight:700;cursor:pointer}button.secondary{background:#e8f0ed;color:var(--green)}button.gold{background:var(--gold);color:#33270c}button:disabled{opacity:.5;cursor:not-allowed}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
+label{display:block;font-weight:650;font-size:13px;margin:12px 0 5px}input,select{width:100%;padding:11px 12px;border:1px solid #cbd8d2;border-radius:9px;font:inherit;background:white}button{border:0;border-radius:10px;padding:11px 15px;background:var(--green);color:white;font:inherit;font-weight:700;cursor:pointer}button.secondary{background:#e8f0ed;color:var(--green)}button.ai-btn{background:linear-gradient(135deg,#1d4ed8,#4f46e5);color:white}button.gold{background:var(--gold);color:#33270c}button:disabled{opacity:.5;cursor:not-allowed}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
 .notice{background:#fff8e7;border:1px solid #f0dfb3;padding:12px;border-radius:10px;color:#66501b;font-size:13px}
 .success{background:#e9f6ef;border:1px solid #bfe3ce;padding:12px;border-radius:10px;color:#20583a;font-size:13px}
+.ai-box{background:var(--ai-bg);border:1px solid #bfdbfe;padding:12px;border-radius:10px;color:#1e3a8a;font-size:13px}
+.badge-ai{display:inline-block;background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;vertical-align:middle}
 table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line)}th{color:#60716a;background:#f7faf8}
 .cam-box{position:relative;background:#111;border-radius:12px;overflow:hidden}
 #camera{width:100%;display:block;max-height:65vh;object-fit:contain}
@@ -42,17 +44,17 @@ footer{text-align:center;color:#809089;padding:30px;font-size:12px}
 </style>
 </head>
 <body>
-<header class="no-print"><div class="brand"><div class="logo">LM</div><div><h1>LJK MASTER</h1><small>Maker · Scanner · Rekap Nilai</small></div></div><div class="status" id="connectionStatus">Menghubungkan...</div></header>
+<header class="no-print"><div class="brand"><div class="logo">LM</div><div><h1>LJK MASTER <span class="badge-ai">AI VISION</span></h1><small>Maker · Hybrid AI Scanner · Rekap Nilai</small></div></div><div class="status" id="connectionStatus">Menghubungkan...</div></header>
 <main class="wrap no-print">
  <div class="tabs">
-  <button class="tab active" data-tab="dashboard">Dashboard</button><button class="tab" data-tab="maker">Buat LJK</button><button class="tab" data-tab="key">Kunci Jawaban</button><button class="tab" data-tab="scanner">Scanner Kamera</button><button class="tab" data-tab="results">Hasil & Rekap</button><button class="tab" data-tab="settings">Pengaturan</button>
+  <button class="tab active" data-tab="dashboard">Dashboard</button><button class="tab" data-tab="maker">Buat LJK</button><button class="tab" data-tab="key">Kunci Jawaban</button><button class="tab" data-tab="scanner">Scanner AI</button><button class="tab" data-tab="results">Hasil & Rekap</button><button class="tab" data-tab="settings">Pengaturan</button>
  </div>
  <section id="dashboard" class="panel active">
   <div class="grid">
-   <div class="card span8"><h2>Selamat datang di LJK MASTER</h2><p class="muted">Buat lembar jawaban dinamis (10–60 soal), pindai menggunakan kamera dengan koreksi sudut otomatis, lalu simpan hasil koreksi ke Google Spreadsheet.</p><div class="actions"><button onclick="showTab('maker')">Buat / Cetak LJK</button><button class="secondary" onclick="showTab('scanner')">Mulai Scan</button></div></div>
+   <div class="card span8"><h2>Selamat datang di LJK MASTER AI</h2><p class="muted">Buat lembar jawaban dinamis (10–60 soal), pindai dengan <b>Gemini AI Vision</b> untuk mengenali tanda silang (X), centang (✓), arsiran tidak penuh, koreksi coretan, serta tulisan tangan Nama & NIS.</p><div class="actions"><button onclick="showTab('maker')">Buat / Cetak LJK</button><button class="ai-btn" onclick="showTab('scanner')">Mulai Scan AI</button></div></div>
    <div class="card span4"><div class="muted">Hasil tersimpan</div><div class="metric" id="totalResults">0</div><div class="muted">data koreksi</div></div>
-   <div class="card span6"><h3>Alur penggunaan</h3><ol class="muted"><li>Pilih jumlah soal (10–60) & cetak LJK di menu <b>Buat LJK</b>.</li><li>Atur kunci jawaban pada menu <b>Kunci Jawaban</b>.</li><li>Peserta menghitamkan bulatan dengan pensil 2B atau spidol/pulpen hitam pekat.</li><li>Scan dengan kamera atau unggah foto pada menu <b>Scanner Kamera</b>.</li><li>Verifikasi titik deteksi & identitas, lalu simpan ke Spreadsheet.</li></ol></div>
-   <div class="card span6"><h3>Tips pemindaian akurat</h3><p class="muted">Pastikan kertas berada di atas alas yang kontras (meja gelap lebih baik) dan keempat kotak hitam di sudut kertas masuk ke dalam area kamera.</p><div class="notice">Sistem otomatis meluruskan kertas yang miring berdasarkan 4 penanda sudut hitam dan menampilkan kotak indikator hasil bacaan.</div></div>
+   <div class="card span6"><h3>Alur penggunaan</h3><ol class="muted"><li>Masukkan <b>Gemini API Key</b> satu kali di menu <b>Pengaturan</b>.</li><li>Pilih jumlah soal (10–60) & cetak LJK di menu <b>Buat LJK</b>.</li><li>Atur kunci jawaban pada menu <b>Kunci Jawaban</b>.</li><li>Siswa boleh mengisi LJK dengan bulatan penuh, tanda silang (X), atau centang (✓).</li><li>Scan atau unggah foto pada menu <b>Scanner AI</b>, klik <b>Analisa AI</b>, lalu simpan.</li></ol></div>
+   <div class="card span6"><h3>Dua Mode Pembacaan</h3><p class="muted"><b>1. Mode AI Vision (Direkomendasikan):</b> Membaca silang, centang, bulatan tipis, coretan ralat, dan otomatis mengisi Nama/NIS siswa.<br><b>2. Mode Cepat Lokal:</b> Berjalan offline di browser untuk bulatan pensil 2B standar.</p><div class="ai-box" id="dashAiStatus">Status AI: Memeriksa konfigurasi...</div></div>
   </div>
  </section>
  <section id="maker" class="panel">
@@ -65,9 +67,9 @@ footer{text-align:center;color:#809089;padding:30px;font-size:12px}
    </select>
    <label>Nama ujian</label><input id="examName" value="UJIAN / EVALUASI">
    <label>Sekolah / penyelenggara</label><input id="schoolName" placeholder="Nama sekolah atau penyelenggara">
-   <label>Petunjuk pengerjaan</label><input id="instructions" value="Hitamkan satu bulatan penuh pada setiap nomor menggunakan pensil 2B atau pulpen hitam.">
+   <label>Petunjuk pengerjaan</label><input id="instructions" value="Tandai satu jawaban (hitamkan bulatan penuh atau beri tanda silang X) pada setiap nomor.">
    <div class="actions"><button onclick="printLJK()">Cetak / Simpan PDF</button></div></div>
-  <div class="card span4"><h3>Format LJK</h3><div class="metric" id="makerCountPreview">50</div><div class="muted">Nomor soal</div><div class="metric">A–E</div><div class="muted">Pilihan jawaban</div><p class="muted" style="margin-top:14px">4 Corner Markers aktif untuk koreksi kemiringan kamera otomatis.</p></div></div>
+  <div class="card span4"><h3>Format LJK</h3><div class="metric" id="makerCountPreview">50</div><div class="muted">Nomor soal</div><div class="metric">A–E</div><div class="muted">Pilihan jawaban</div><p class="muted" style="margin-top:14px">Kompatibel dengan Scanner AI Vision & OMR Lokal.</p></div></div>
  </section>
  <section id="key" class="panel">
   <div class="card">
@@ -85,27 +87,33 @@ footer{text-align:center;color:#809089;padding:30px;font-size:12px}
  </section>
  <section id="scanner" class="panel">
   <div class="grid">
-   <div class="card span8"><h2>Scanner Kamera</h2><p class="muted">Arahkan kamera tegak lurus ke LJK. Pastikan 4 kotak hitam di sudut kertas terlihat jelas.</p>
+   <div class="card span8"><h2>Scanner AI & Kamera</h2><p class="muted">Ambil foto atau unggah gambar LJK. Gunakan tombol <b>Analisa dengan AI</b> untuk membaca tanda silang, centang, coretan ralat, dan identitas tulisan tangan.</p>
     <div class="cam-box" id="camBox"><video id="camera" autoplay playsinline></video><div class="cam-guide"></div></div>
     <canvas id="captureCanvas" hidden></canvas><canvas id="warpedCanvas" hidden></canvas>
     <img id="captured" alt="Hasil tangkapan kamera">
     <div class="actions">
      <button id="startCamera">Aktifkan Kamera</button>
      <button id="takePhoto" disabled>Ambil Gambar</button>
-     <button id="retake" class="secondary" style="display:none">Ulangi</button>
      <label for="uploadFile" class="secondary" style="margin:0;padding:11px 15px;border-radius:10px;cursor:pointer;background:#e8f0ed;color:var(--green);font-weight:700;display:inline-block">Upload Foto</label>
      <input type="file" id="uploadFile" accept="image/*" hidden>
+     <button id="analyzeAiBtn" class="ai-btn" style="display:none">Analisa Ulang dengan AI</button>
+     <button id="retake" class="secondary" style="display:none">Foto Ulang</button>
     </div>
     <div id="scanMessage" class="muted" style="margin-top:10px">Klik "Aktifkan Kamera" atau unggah foto LJK.</div>
    </div>
-   <div class="card span4"><h3>Data peserta</h3>
+   <div class="card span4"><h3>Data peserta <span class="badge-ai">Auto-Fill AI</span></h3>
     <label>Jumlah Soal LJK</label>
     <select id="scanQuestionCount" onchange="syncQuestionCount(this.value)">
      <option value="10">10 Soal</option><option value="15">15 Soal</option><option value="20">20 Soal</option><option value="25">25 Soal</option>
      <option value="30">30 Soal</option><option value="35">35 Soal</option><option value="40">40 Soal</option><option value="45">45 Soal</option>
      <option value="50" selected>50 Soal</option><option value="60">60 Soal</option>
     </select>
-    <label>Nama peserta</label><input id="studentName" placeholder="Nama lengkap">
+    <label>Mode Pemindaian Otomatis</label>
+    <select id="scanMode">
+     <option value="ai" selected>AI Vision Cerdas (Silang / Centang / Ralat + OCR)</option>
+     <option value="local">Cepat Lokal (Hanya Bulatan Hitam Penuh)</option>
+    </select>
+    <label>Nama peserta</label><input id="studentName" placeholder="Otomatis terisi AI atau ketik manual">
     <label>NIS</label><input id="studentNis" placeholder="Nomor induk siswa">
     <label>Kelas</label><input id="studentClass" placeholder="Contoh: X A">
     <label>Sekolah</label><input id="studentSchool" placeholder="Nama sekolah">
@@ -114,7 +122,12 @@ footer{text-align:center;color:#809089;padding:30px;font-size:12px}
   </div>
  </section>
  <section id="results" class="panel"><div class="card"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h2>Hasil Koreksi</h2><p class="muted">Data diambil dari Google Spreadsheet.</p></div><button onclick="refreshResults()">Muat Ulang</button></div><div style="overflow:auto;margin-top:12px"><table><thead><tr><th>Waktu</th><th>Nama</th><th>NIS</th><th>Kelas</th><th>Benar</th><th>Nilai</th></tr></thead><tbody id="resultsBody"><tr><td colspan="6">Memuat data...</td></tr></tbody></table></div></div></section>
- <section id="settings" class="panel"><div class="card"><h2>Pengaturan koneksi</h2><p class="muted">URL Web App Google Apps Script.</p><label>URL Web App</label><input id="apiUrl" placeholder="https://script.google.com/macros/s/...../exec"><div class="actions"><button onclick="saveSettings()">Simpan & Tes Koneksi</button><button class="secondary" onclick="resetDefaultUrl()">Reset URL Default</button></div><div id="settingsMsg"></div></div></section>
+ <section id="settings" class="panel">
+  <div class="grid">
+   <div class="card span6"><h2>Koneksi Spreadsheet</h2><p class="muted">URL Web App Google Apps Script.</p><label>URL Web App</label><input id="apiUrl" placeholder="https://script.google.com/macros/s/...../exec"><div class="actions"><button onclick="saveSettings()">Simpan & Tes Koneksi</button><button class="secondary" onclick="resetDefaultUrl()">Reset URL Default</button></div><div id="settingsMsg" style="margin-top:12px"></div></div>
+   <div class="card span6"><h2>Konfigurasi Gemini AI Vision</h2><p class="muted">Masukkan API Key dari <b>Google AI Studio</b> agar AI dapat menganalisa penanda siswa (silang, centang, coretan koreksi) dan membaca identitas tulisan tangan.</p><label>Gemini API Key</label><input id="geminiApiKey" type="password" placeholder="AIzaSy..."><div class="actions"><button class="ai-btn" onclick="saveAiKey()">Simpan API Key ke Server</button></div><div id="aiKeyMsg" style="margin-top:12px"></div></div>
+  </div>
+ </section>
 </main>
 <div id="ljkPrint">
  <div class="sheet"><i class="marker tl"></i><i class="marker tr"></i><i class="marker bl"></i><i class="marker br"></i>
@@ -125,18 +138,18 @@ footer{text-align:center;color:#809089;padding:30px;font-size:12px}
    <div class="idrow"><span>Kelas:</span><span class="idline"></span></div>
    <div class="idrow"><span>No. Peserta:</span><span class="idline"></span></div>
   </div>
-  <div class="instructions" id="printInstructions">Hitamkan satu bulatan penuh pada setiap nomor menggunakan pensil 2B atau pulpen hitam.</div>
+  <div class="instructions" id="printInstructions">Tandai satu jawaban (hitamkan bulatan penuh atau beri tanda silang X) pada setiap nomor.</div>
   <div class="columns" id="printColumns"><div id="questions1"></div><div id="questions2"></div></div>
   <div class="foot">Pastikan identitas terisi. Jangan melipat atau mencoret kotak hitam di sudut kertas.</div>
  </div>
 </div>
-<footer class="no-print">LJK MASTER · Versi 2.0 Dinamis · Dibangun untuk kebutuhan ujian sekolah</footer>
+<footer class="no-print">LJK MASTER · Versi 3.0 AI Vision · Dibangun untuk kebutuhan ujian sekolah</footer>
 
 <script>
 const DEFAULT_API = 'https://script.google.com/macros/s/AKfycbxhKgm1cmqpz7Y7wZCK9nbN1hl9gGjFxRF8UptnVggscwPrK19HRtFnKYZ4RWu3leyNtw/exec';
 const OPTIONS = ['A','B','C','D','E'];
 let totalQuestions = Number(localStorage.getItem('ljkm_count')) || 50;
-let stream = null, capturedData = null;
+let stream = null, lastPreparedBase64 = null;
 let answerKey = JSON.parse(localStorage.getItem('ljkm_key') || 'null') || Array(60).fill('');
 if (answerKey.length < 60) answerKey = answerKey.concat(Array(60 - answerKey.length).fill(''));
 let detectedAnswers = Array(totalQuestions).fill('');
@@ -245,16 +258,44 @@ function resetDefaultUrl() {
   testConnection();
 }
 
+async function saveAiKey() {
+  const key = $('geminiApiKey').value.trim();
+  localStorage.setItem('ljkm_gemini_key', key);
+  $('aiKeyMsg').textContent = 'Menyimpan API Key ke server Apps Script...';
+  try {
+    const r = await apiPost('saveApiKey', { apiKey: key });
+    $('aiKeyMsg').innerHTML = `<div class="success">${r.message}</div>`;
+    updateAiStatusBadge(r.aiConfigured || !!key);
+  } catch (e) {
+    $('aiKeyMsg').innerHTML = `<div class="notice">Tersimpan di browser lokal, namun gagal menyimpan ke server: ${e.message}</div>`;
+    updateAiStatusBadge(!!key);
+  }
+}
+
+function updateAiStatusBadge(isReady) {
+  const el = $('dashAiStatus');
+  if (!el) return;
+  if (isReady) {
+    el.className = 'success';
+    el.innerHTML = '<b>AI Vision Aktif:</b> Gemini 2.5 Flash siap menganalisa penanda siswa & tulisan tangan.';
+  } else {
+    el.className = 'notice';
+    el.innerHTML = '<b>AI Vision Belum Diatur:</b> Masukkan Gemini API Key di menu <b>Pengaturan</b> untuk mengaktifkan pembacaan cerdas.';
+  }
+}
+
 function testConnection() {
   $('settingsMsg').textContent = 'Menguji koneksi...';
   apiCall('ping')
     .then(r => {
-      $('settingsMsg').innerHTML = `<p class="success">${r.message || 'Terhubung'} (${r.spreadsheet || ''})</p>`;
+      $('settingsMsg').innerHTML = `<div class="success">${r.message || 'Terhubung'} (${r.spreadsheet || ''})</div>`;
       $('connectionStatus').textContent = 'Spreadsheet terhubung';
+      const localAiKey = localStorage.getItem('ljkm_gemini_key');
+      updateAiStatusBadge(r.aiConfigured || !!localAiKey);
       refreshResults();
     })
     .catch(e => {
-      $('settingsMsg').innerHTML = `<p class="notice">Koneksi gagal: ${e.message}</p>`;
+      $('settingsMsg').innerHTML = `<div class="notice">Koneksi gagal: ${e.message}</div>`;
       $('connectionStatus').textContent = 'Koneksi gagal';
     });
 }
@@ -262,26 +303,26 @@ function testConnection() {
 async function apiCall(action, data = {}) {
   const base = (localStorage.getItem('ljkm_api') || DEFAULT_API).trim();
   if (!base) throw new Error('URL Apps Script belum diatur');
+  const params = new URLSearchParams({ action, payload: JSON.stringify(data), _t: Date.now() });
+  const res = await fetch(base + '?' + params.toString(), { method: 'GET', redirect: 'follow' });
+  if (!res.ok) throw new Error('HTTP Error ' + res.status);
+  const json = await res.json();
+  if (!json.ok) throw new Error(json.error || 'Terjadi kesalahan pada server');
+  return json;
+}
 
-  const params = new URLSearchParams({
-    action,
-    payload: JSON.stringify(data),
-    _t: Date.now()
-  });
-
-  const res = await fetch(base + '?' + params.toString(), {
-    method: 'GET',
+async function apiPost(action, data = {}) {
+  const base = (localStorage.getItem('ljkm_api') || DEFAULT_API).trim();
+  if (!base) throw new Error('URL Apps Script belum diatur');
+  const res = await fetch(base, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ action, payload: data }),
     redirect: 'follow'
   });
-
-  if (!res.ok) {
-    throw new Error('HTTP Error ' + res.status);
-  }
-
+  if (!res.ok) throw new Error('HTTP Error ' + res.status);
   const json = await res.json();
-  if (!json.ok) {
-    throw new Error(json.error || 'Terjadi kesalahan pada server');
-  }
+  if (!json.ok) throw new Error(json.error || 'Terjadi kesalahan pada server');
   return json;
 }
 
@@ -308,7 +349,7 @@ $('startCamera').onclick = async () => {
     $('camBox').style.display = 'block';
     $('captured').style.display = 'none';
     $('takePhoto').disabled = false;
-    $('scanMessage').textContent = 'Kamera aktif. Pastikan 4 kotak sudut hitam terlihat di dalam bingkai.';
+    $('scanMessage').textContent = 'Kamera aktif. Pastikan seluruh kertas LJK terlihat jelas.';
   } catch (e) {
     $('scanMessage').textContent = 'Tidak bisa membuka kamera: ' + e.message;
   }
@@ -341,19 +382,107 @@ $('retake').onclick = () => {
   $('captured').style.display = 'none';
   $('camBox').style.display = 'block';
   $('retake').style.display = 'none';
-  capturedData = null;
+  $('analyzeAiBtn').style.display = 'none';
+  lastPreparedBase64 = null;
   $('saveResult').disabled = true;
   $('scanOutput').textContent = 'Ambil gambar untuk membaca jawaban.';
+};
+
+$('analyzeAiBtn').onclick = () => {
+  if (lastPreparedBase64) runAiAnalysis(lastPreparedBase64);
 };
 
 function handleCapturedCanvas(srcCanvas) {
   $('camBox').style.display = 'none';
   $('retake').style.display = 'inline-block';
-  $('scanMessage').textContent = 'Mendeteksi penanda sudut & membaca area jawaban...';
-  processOMR(srcCanvas);
+  $('analyzeAiBtn').style.display = 'inline-block';
+
+  // Siapkan gambar terkompresi (lebar maks 1200px) untuk AI Vision agar cepat & tajam
+  const maxW = 1200;
+  const scale = srcCanvas.width > maxW ? (maxW / srcCanvas.width) : 1;
+  const aiCanvas = document.createElement('canvas');
+  aiCanvas.width = Math.round(srcCanvas.width * scale);
+  aiCanvas.height = Math.round(srcCanvas.height * scale);
+  aiCanvas.getContext('2d').drawImage(srcCanvas, 0, 0, aiCanvas.width, aiCanvas.height);
+  lastPreparedBase64 = aiCanvas.toDataURL('image/jpeg', 0.88);
+
+  $('captured').src = lastPreparedBase64;
+  $('captured').style.display = 'block';
+
+  const mode = $('scanMode').value;
+  if (mode === 'ai') {
+    runAiAnalysis(lastPreparedBase64);
+  } else {
+    processLocalOMR(srcCanvas);
+  }
 }
 
-// DETEKSI 4 CORNER MARKERS & PERSPECTIVE WARP
+async function runAiAnalysis(base64Image) {
+  const n = totalQuestions;
+  $('scanMessage').innerHTML = '<b>AI Vision sedang menganalisa lembar jawaban & tulisan tangan...</b>';
+  $('scanOutput').innerHTML = '<div class="ai-box">Memproses gambar dengan Gemini Vision (mengenali tanda silang, centang, arsiran, koreksi coretan, dan identitas)...</div>';
+  $('saveResult').disabled = true;
+  $('analyzeAiBtn').disabled = true;
+
+  try {
+    const localKey = localStorage.getItem('ljkm_gemini_key') || '';
+    const res = await apiPost('analyzeAI', {
+      imageBase64: base64Image,
+      totalQuestions: n,
+      apiKey: localKey
+    });
+
+    const ai = res.aiResult;
+    if (ai.name && !$('studentName').value.trim()) $('studentName').value = ai.name;
+    else if (ai.name) $('studentName').value = ai.name;
+
+    if (ai.nis) $('studentNis').value = ai.nis;
+    if (ai.className) $('studentClass').value = ai.className;
+
+    renderScanResults(ai.answers, ai.ambiguous, 'AI Vision (Gemini 2.5 Flash)', ai.notes);
+    $('scanMessage').textContent = 'Analisa AI selesai! Silakan periksa hasil di bawah sebelum menyimpan.';
+  } catch (e) {
+    $('scanMessage').textContent = 'Analisa AI gagal: ' + e.message;
+    $('scanOutput').innerHTML = `<div class="notice"><b>Analisa AI gagal:</b> ${esc(e.message)}<br><br><button class="secondary" onclick="processLocalOMR($('captureCanvas'))">Gunakan Mode Lokal Sebagai Cadangan</button></div>`;
+  } finally {
+    $('analyzeAiBtn').disabled = false;
+  }
+}
+
+function renderScanResults(answers, ambiguousList, sourceLabel, notesText = '') {
+  const n = totalQuestions;
+  detectedAnswers = answers.slice(0, n);
+  const key = answerKey.slice(0, n);
+  let correct = 0, checked = 0;
+  detectedAnswers.forEach((a, i) => {
+    if (key[i]) { checked++; if (a === key[i]) correct++; }
+  });
+  const score = checked ? Math.round((correct / checked) * 100) : null;
+  const ambCount = Array.isArray(ambiguousList) ? ambiguousList.length : detectedAnswers.filter(x => !x).length;
+
+  $('scanOutput').innerHTML = `
+    <div class="success">
+      <b>Metode: ${esc(sourceLabel)}</b> · ${ambCount} nomor kosong/ragu.
+      ${checked ? `<br>Skor sementara: <b>${score}/100</b> (${correct} benar dari ${checked} kunci terisi).` : '<br>Atur kunci jawaban untuk menghitung nilai.'}
+      ${notesText ? `<br><small>Catatan AI: ${esc(notesText)}</small>` : ''}
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:12px">
+      ${detectedAnswers.map((a, i) => {
+        const isAmb = Array.isArray(ambiguousList) && ambiguousList.includes(i + 1);
+        let bg = '#fff';
+        if (isAmb) bg = '#fef9c3';
+        else if (key[i]) bg = (a === key[i] ? '#eefaf3' : (a ? '#fef2f2' : '#fff'));
+        return `<label style="margin:0;border:1px solid ${isAmb ? '#eab308' : 'var(--line)'};border-radius:7px;padding:6px;text-align:center;background:${bg}">${i + 1}<br><select data-scan="${i}" style="padding:4px;margin-top:3px"><option value="">-</option>${OPTIONS.map(o => `<option ${a === o ? 'selected' : ''}>${o}</option>`).join('')}</select></label>`;
+      }).join('')}
+    </div>`;
+
+  document.querySelectorAll('[data-scan]').forEach(s => s.onchange = () => {
+    detectedAnswers[+s.dataset.scan] = s.value;
+  });
+  $('saveResult').disabled = false;
+}
+
+// MODE LOKAL (CADANGAN OFFLINE)
 function findCornerMarkers(canvas) {
   const w = 400, h = Math.round(canvas.height * (400 / canvas.width));
   const tmp = document.createElement('canvas');
@@ -361,31 +490,25 @@ function findCornerMarkers(canvas) {
   const ctx = tmp.getContext('2d');
   ctx.drawImage(canvas, 0, 0, w, h);
   const img = ctx.getImageData(0, 0, w, h).data;
-
   const gray = new Uint8Array(w * h);
   let sum = 0;
   for (let i = 0, p = 0; i < img.length; i += 4, p++) {
     const g = (img[i] * 77 + img[i + 1] * 150 + img[i + 2] * 29) >> 8;
-    gray[p] = g;
-    sum += g;
+    gray[p] = g; sum += g;
   }
   const thresh = Math.min(130, (sum / (w * h)) * 0.65);
-
   const zones = [
     { name: 'tl', x0: 0, x1: Math.floor(w * 0.35), y0: 0, y1: Math.floor(h * 0.35), tx: 0, ty: 0 },
     { name: 'tr', x0: Math.floor(w * 0.65), x1: w, y0: 0, y1: Math.floor(h * 0.35), tx: w, ty: 0 },
     { name: 'bl', x0: 0, x1: Math.floor(w * 0.35), y0: Math.floor(h * 0.65), y1: h, tx: 0, ty: h },
     { name: 'br', x0: Math.floor(w * 0.65), x1: w, y0: Math.floor(h * 0.65), y1: h, tx: w, ty: h }
   ];
-
   const scaleX = canvas.width / w, scaleY = canvas.height / h;
   const corners = {};
-
   for (const z of zones) {
     let bestScore = -1, bestPt = null;
-    const step = 3;
-    for (let y = z.y0 + 6; y < z.y1 - 6; y += step) {
-      for (let x = z.x0 + 6; x < z.x1 - 6; x += step) {
+    for (let y = z.y0 + 6; y < z.y1 - 6; y += 3) {
+      for (let x = z.x0 + 6; x < z.x1 - 6; x += 3) {
         if (gray[y * w + x] >= thresh) continue;
         let darkCount = 0;
         for (let dy = -4; dy <= 4; dy++) {
@@ -394,12 +517,8 @@ function findCornerMarkers(canvas) {
           }
         }
         if (darkCount > 55) {
-          const distCorner = Math.hypot(x - z.tx, y - z.ty);
-          const score = darkCount * 4 - distCorner;
-          if (score > bestScore) {
-            bestScore = score;
-            bestPt = { x: x * scaleX, y: y * scaleY };
-          }
+          const score = darkCount * 4 - Math.hypot(x - z.tx, y - z.ty);
+          if (score > bestScore) { bestScore = score; bestPt = { x: x * scaleX, y: y * scaleY }; }
         }
       }
     }
@@ -412,36 +531,26 @@ function findCornerMarkers(canvas) {
 function warpPerspective(srcCanvas, corners, outW, outH) {
   const dst = $('warpedCanvas');
   dst.width = outW; dst.height = outH;
-  const dctx = dst.getContext('2d');
-  const sctx = srcCanvas.getContext('2d');
+  const dctx = dst.getContext('2d'), sctx = srcCanvas.getContext('2d');
   const srcData = sctx.getImageData(0, 0, srcCanvas.width, srcCanvas.height);
   const dstData = dctx.createImageData(outW, outH);
   const sw = srcCanvas.width, sh = srcCanvas.height;
-
-  const mx0 = outW * 0.031, mx1 = outW * 0.969;
-  const my0 = outH * 0.022, my1 = outH * 0.978;
-
+  const mx0 = outW * 0.031, mx1 = outW * 0.969, my0 = outH * 0.022, my1 = outH * 0.978;
   for (let y = 0; y < outH; y++) {
     const v = (y - my0) / (my1 - my0);
     const lx = corners.tl.x + (corners.bl.x - corners.tl.x) * v;
     const ly = corners.tl.y + (corners.bl.y - corners.tl.y) * v;
     const rx = corners.tr.x + (corners.br.x - corners.tr.x) * v;
     const ry = corners.tr.y + (corners.br.y - corners.tr.y) * v;
-
     for (let x = 0; x < outW; x++) {
       const u = (x - mx0) / (mx1 - mx0);
-      const sx = Math.round(lx + (rx - lx) * u);
-      const sy = Math.round(ly + (ry - ly) * u);
+      const sx = Math.round(lx + (rx - lx) * u), sy = Math.round(ly + (ry - ly) * u);
       const di = (y * outW + x) * 4;
       if (sx >= 0 && sx < sw && sy >= 0 && sy < sh) {
         const si = (sy * sw + sx) * 4;
-        dstData.data[di] = srcData.data[si];
-        dstData.data[di + 1] = srcData.data[si + 1];
-        dstData.data[di + 2] = srcData.data[si + 2];
-        dstData.data[di + 3] = 255;
+        dstData.data[di] = srcData.data[si]; dstData.data[di + 1] = srcData.data[si + 1]; dstData.data[di + 2] = srcData.data[si + 2]; dstData.data[di + 3] = 255;
       } else {
-        dstData.data[di] = dstData.data[di + 1] = dstData.data[di + 2] = 255;
-        dstData.data[di + 3] = 255;
+        dstData.data[di] = dstData.data[di + 1] = dstData.data[di + 2] = 255; dstData.data[di + 3] = 255;
       }
     }
   }
@@ -449,14 +558,13 @@ function warpPerspective(srcCanvas, corners, outW, outH) {
   return dst;
 }
 
-function processOMR(rawCanvas) {
+function processLocalOMR(rawCanvas) {
   const W = 1000, H = 1439;
   const corners = findCornerMarkers(rawCanvas);
   let workCanvas, markerStatus = '';
-
   if (corners) {
     workCanvas = warpPerspective(rawCanvas, corners, W, H);
-    markerStatus = '4 penanda sudut terdeteksi (perspektif diluruskan otomatis).';
+    markerStatus = 'OMR Lokal (4 marker sudut terdeteksi)';
   } else {
     workCanvas = $('warpedCanvas');
     workCanvas.width = W; workCanvas.height = H;
@@ -465,32 +573,22 @@ function processOMR(rawCanvas) {
     let sw = vw, sh = vh;
     if (vw / vh > target) sw = vh * target; else sh = vw / target;
     ctx.drawImage(rawCanvas, (vw - sw) / 2, (vh - sh) / 2, sw, sh, 0, 0, W, H);
-    markerStatus = 'Penanda sudut tidak lengkap, memakai pembacaan standar.';
+    markerStatus = 'OMR Lokal (pembacaan standar)';
   }
 
   const ctx = workCanvas.getContext('2d', { willReadFrequently: true });
-  const n = totalQuestions;
-  const split = n <= 25 ? n : Math.ceil(n / 2);
-
-  const dx = W * 0.03737;
-  const dy = H * 0.02561;
-  const y0 = H * 0.1912;
-  const rSample = Math.max(5, Math.round(W * 0.0075));
-
+  const n = totalQuestions, split = n <= 25 ? n : Math.ceil(n / 2);
+  const dx = W * 0.03737, dy = H * 0.02561, y0 = H * 0.1912, rSample = Math.max(5, Math.round(W * 0.0075));
   let answers = [], ambiguous = [];
 
   for (let q = 0; q < n; q++) {
-    const col = q < split ? 0 : 1;
-    const row = q < split ? q : (q - split);
+    const col = q < split ? 0 : 1, row = q < split ? q : (q - split);
     const x0 = col === 0 ? W * 0.1207 : W * 0.5955;
-
     let scores = [];
     for (let k = 0; k < 5; k++) {
-      const cx = Math.round(x0 + k * dx);
-      const cy = Math.round(y0 + row * dy);
+      const cx = Math.round(x0 + k * dx), cy = Math.round(y0 + row * dy);
       scores.push({ val: sampleDarkness(ctx, cx, cy, rSample), cx, cy, k });
     }
-
     const sorted = [...scores].sort((a, b) => b.val - a.val);
     const chosen = sorted[0];
     const isFilled = chosen.val > 0.22 && (chosen.val - sorted[1].val) > 0.035;
@@ -512,33 +610,14 @@ function processOMR(rawCanvas) {
 
   $('captured').src = workCanvas.toDataURL('image/jpeg', 0.92);
   $('captured').style.display = 'block';
-
-  detectedAnswers = answers;
-  const key = answerKey.slice(0, n);
-  let correct = 0, checked = 0;
-  answers.forEach((a, i) => {
-    if (key[i]) { checked++; if (a === key[i]) correct++; }
-  });
-  const score = checked ? Math.round((correct / checked) * 100) : null;
-
-  $('scanOutput').innerHTML = `
-    <div class="success"><b>${markerStatus}</b><br>${ambiguous.length} nomor kosong/ragu. ${checked ? `Skor sementara: <b>${score}/100</b> (${correct} benar dari ${checked} kunci terisi).` : 'Atur kunci jawaban untuk menghitung nilai.'}</div>
-    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:12px">
-      ${answers.map((a, i) => `<label style="margin:0;border:1px solid var(--line);border-radius:7px;padding:6px;text-align:center;background:${key[i] ? (a === key[i] ? '#eefaf3' : (a ? '#fef2f2' : '#fff')) : '#fff'}">${i + 1}<br><select data-scan="${i}" style="padding:4px;margin-top:3px"><option value="">-</option>${OPTIONS.map(o => `<option ${a === o ? 'selected' : ''}>${o}</option>`).join('')}</select></label>`).join('')}
-    </div>`;
-
-  document.querySelectorAll('[data-scan]').forEach(s => s.onchange = () => detectedAnswers[+s.dataset.scan] = s.value);
-  $('scanMessage').textContent = 'Periksa kotak hijau pada gambar dan koreksi pilihan jika ada yang meleset.';
-  $('saveResult').disabled = false;
+  renderScanResults(answers, ambiguous, markerStatus);
+  $('scanMessage').textContent = 'Pembacaan lokal selesai.';
 }
 
 function sampleDarkness(ctx, cx, cy, r) {
   const d = ctx.getImageData(Math.max(0, cx - r), Math.max(0, cy - r), r * 2 + 1, r * 2 + 1).data;
   let sum = 0, n = 0;
-  for (let i = 0; i < d.length; i += 4) {
-    sum += (d[i] + d[i + 1] + d[i + 2]) / 3;
-    n++;
-  }
+  for (let i = 0; i < d.length; i += 4) { sum += (d[i] + d[i + 1] + d[i + 2]) / 3; n++; }
   return 1 - sum / (n * 255);
 }
 
@@ -587,6 +666,7 @@ window.addEventListener('beforeunload', () => {
 
 if (!localStorage.getItem('ljkm_api')) localStorage.setItem('ljkm_api', DEFAULT_API);
 $('apiUrl').value = localStorage.getItem('ljkm_api');
+if (localStorage.getItem('ljkm_gemini_key')) $('geminiApiKey').value = localStorage.getItem('ljkm_gemini_key');
 syncQuestionCount(totalQuestions);
 testConnection();
 </script>
