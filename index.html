@@ -259,21 +259,30 @@ function testConnection() {
     });
 }
 
-function apiCall(action, data = {}) {
-  return new Promise((resolve, reject) => {
-    const base = localStorage.getItem('ljkm_api') || DEFAULT_API;
-    if (!base) return reject(new Error('URL Apps Script belum diatur'));
-    const cb = 'ljkcb_' + Date.now() + '_' + Math.floor(Math.random() * 9999);
-    const s = document.createElement('script');
-    let done = false;
-    const finish = (fn, v) => { if (done) return; done = true; delete window[cb]; s.remove(); fn(v); };
-    window[cb] = r => { if (r.ok) finish(resolve, r); else finish(reject, new Error(r.error || 'API error')); };
-    const params = new URLSearchParams({ action, callback: cb, payload: JSON.stringify(data) });
-    s.src = base + '?' + params.toString();
-    s.onerror = () => finish(reject, new Error('Tidak dapat menghubungi Apps Script'));
-    document.body.appendChild(s);
-    setTimeout(() => finish(reject, new Error('Waktu koneksi habis')), 15000);
+async function apiCall(action, data = {}) {
+  const base = (localStorage.getItem('ljkm_api') || DEFAULT_API).trim();
+  if (!base) throw new Error('URL Apps Script belum diatur');
+
+  const params = new URLSearchParams({
+    action,
+    payload: JSON.stringify(data),
+    _t: Date.now()
   });
+
+  const res = await fetch(base + '?' + params.toString(), {
+    method: 'GET',
+    redirect: 'follow'
+  });
+
+  if (!res.ok) {
+    throw new Error('HTTP Error ' + res.status);
+  }
+
+  const json = await res.json();
+  if (!json.ok) {
+    throw new Error(json.error || 'Terjadi kesalahan pada server');
+  }
+  return json;
 }
 
 async function refreshResults() {
@@ -378,7 +387,6 @@ function findCornerMarkers(canvas) {
     for (let y = z.y0 + 6; y < z.y1 - 6; y += step) {
       for (let x = z.x0 + 6; x < z.x1 - 6; x += step) {
         if (gray[y * w + x] >= thresh) continue;
-        // Cek kepadatan blok 9x9 di sekitar titik (x,y)
         let darkCount = 0;
         for (let dy = -4; dy <= 4; dy++) {
           for (let dx = -4; dx <= 4; dx++) {
@@ -386,7 +394,6 @@ function findCornerMarkers(canvas) {
           }
         }
         if (darkCount > 55) {
-          // Prioritaskan yang paling dekat ke sudut kanvas
           const distCorner = Math.hypot(x - z.tx, y - z.ty);
           const score = darkCount * 4 - distCorner;
           if (score > bestScore) {
@@ -411,7 +418,6 @@ function warpPerspective(srcCanvas, corners, outW, outH) {
   const dstData = dctx.createImageData(outW, outH);
   const sw = srcCanvas.width, sh = srcCanvas.height;
 
-  // Pusat marker pada kanvas standar (margin 6mm + offset 6.5mm = ~3.1% lebar, ~2.2% tinggi)
   const mx0 = outW * 0.031, mx1 = outW * 0.969;
   const my0 = outH * 0.022, my1 = outH * 0.978;
 
@@ -444,7 +450,7 @@ function warpPerspective(srcCanvas, corners, outW, outH) {
 }
 
 function processOMR(rawCanvas) {
-  const W = 1000, H = 1439; // Rasio proporsional sheet 198mm x 285mm
+  const W = 1000, H = 1439;
   const corners = findCornerMarkers(rawCanvas);
   let workCanvas, markerStatus = '';
 
@@ -452,7 +458,6 @@ function processOMR(rawCanvas) {
     workCanvas = warpPerspective(rawCanvas, corners, W, H);
     markerStatus = '4 penanda sudut terdeteksi (perspektif diluruskan otomatis).';
   } else {
-    // Fallback crop tengah jika marker tidak tertangkap
     workCanvas = $('warpedCanvas');
     workCanvas.width = W; workCanvas.height = H;
     const ctx = workCanvas.getContext('2d');
@@ -467,12 +472,6 @@ function processOMR(rawCanvas) {
   const n = totalQuestions;
   const split = n <= 25 ? n : Math.ceil(n / 2);
 
-  // Koordinat terkalibrasi terhadap .sheet (198mm x 285mm)
-  // Kolom 1 x0: padding 12mm + qnum 7mm + gap 2.4mm + radius 2.5mm = 23.9mm -> 23.9/198 = 0.1207
-  // Kolom 2 x0: 12mm + 84mm + 10mm + 7mm + 2.4mm + 2.5mm = 117.9mm -> 117.9/198 = 0.5955
-  // Jarak antar bulatan dx: 5mm + 2.4mm = 7.4mm -> 7.4/198 = 0.03737
-  // Baris pertama y0: ~54.5mm -> 54.5/285 = 0.1912
-  // Tinggi baris dy: 7.3mm -> 7.3/285 = 0.02561
   const dx = W * 0.03737;
   const dy = H * 0.02561;
   const y0 = H * 0.1912;
@@ -499,7 +498,6 @@ function processOMR(rawCanvas) {
     answers.push(answer);
     if (!answer) ambiguous.push(q + 1);
 
-    // Gambar indikator visual pada kanvas hasil
     scores.forEach(s => {
       ctx.lineWidth = 2;
       if (isFilled && s.k === chosen.k) {
@@ -587,7 +585,6 @@ window.addEventListener('beforeunload', () => {
   if (stream) stream.getTracks().forEach(t => t.stop());
 });
 
-// Inisialisasi awal
 if (!localStorage.getItem('ljkm_api')) localStorage.setItem('ljkm_api', DEFAULT_API);
 $('apiUrl').value = localStorage.getItem('ljkm_api');
 syncQuestionCount(totalQuestions);
