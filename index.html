@@ -16,103 +16,582 @@ label{display:block;font-weight:650;font-size:13px;margin:12px 0 5px}input,selec
 .notice{background:#fff8e7;border:1px solid #f0dfb3;padding:12px;border-radius:10px;color:#66501b;font-size:13px}
 .success{background:#e9f6ef;border:1px solid #bfe3ce;padding:12px;border-radius:10px;color:#20583a;font-size:13px}
 table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line)}th{color:#60716a;background:#f7faf8}
-#camera{width:100%;background:#111;border-radius:12px;max-height:65vh;object-fit:contain}#captured{width:100%;border-radius:12px;display:none}
-.preview{background:#f8faf9;border:1px dashed #b9c9c1;border-radius:12px;padding:14px;text-align:center}
+.cam-box{position:relative;background:#111;border-radius:12px;overflow:hidden}
+#camera{width:100%;display:block;max-height:65vh;object-fit:contain}
+.cam-guide{position:absolute;inset:4%;border:2px dashed rgba(233,185,73,.75);border-radius:8px;pointer-events:none}
+#captured{width:100%;border-radius:12px;display:none;border:1px solid var(--line)}
 .answerkey{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.answerkey select{padding:8px}
 #ljkPrint{display:none}
 footer{text-align:center;color:#809089;padding:30px;font-size:12px}
-@media(max-width:760px){.span8,.span4,.span6{grid-column:span 12}.wrap{margin:16px auto}.brand small{display:none}}
+@media(max-width:760px){.span8,.span4,.span6{grid-column:span 12}.wrap{margin:16px auto}.brand small{display:none}.answerkey{grid-template-columns:repeat(3,1fr)}}
 @media print{
- @page{size:A4;margin:8mm}
+ @page{size:A4;margin:6mm}
  body{background:white}.no-print,header,.wrap,footer{display:none!important}#ljkPrint{display:block!important;color:#000;font-family:Arial,sans-serif}
- .sheet{width:100%;height:279mm;position:relative;padding:7mm 8mm;border:0}
- .sheet h1{text-align:center;font-size:17pt;margin:0}.sheet .sub{text-align:center;font-size:8pt;margin:2mm 0 4mm}
- .idgrid{display:grid;grid-template-columns:1fr 1fr;gap:3mm;font-size:9pt;margin-bottom:4mm}
- .idline{border-bottom:1px solid #000;min-height:7mm;padding:1mm}
- .instructions{font-size:8pt;border:1px solid #000;padding:2mm;margin-bottom:3mm}
- .columns{display:grid;grid-template-columns:1fr 1fr;gap:8mm}
- .qrow{height:8.3mm;display:flex;align-items:center;gap:2mm;font-size:9pt;border-bottom:.2mm solid #ddd}
- .qnum{width:7mm;font-weight:bold}.bubble{width:5.2mm;height:5.2mm;border:1px solid #000;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:6.5pt}
+ .sheet{width:198mm;height:285mm;position:relative;padding:11mm 12mm;box-sizing:border-box;margin:0 auto}
+ .sheet h1{text-align:center;font-size:16pt;margin:0;text-transform:uppercase}.sheet .sub{text-align:center;font-size:8pt;margin:1.5mm 0 3.5mm}
+ .idgrid{display:grid;grid-template-columns:1fr 1fr;gap:2.5mm 6mm;font-size:9pt;margin-bottom:3mm}
+ .idrow{display:flex;align-items:flex-end;gap:2mm}.idline{flex:1;border-bottom:1px solid #000;height:5mm}
+ .instructions{font-size:8pt;border:1px solid #000;padding:1.8mm 2.5mm;margin-bottom:3.5mm}
+ .columns{display:grid;grid-template-columns:1fr 1fr;gap:10mm}
+ .columns.single{grid-template-columns:1fr;max-width:95mm}
+ .qrow{height:7.3mm;display:flex;align-items:center;gap:2.4mm;font-size:9pt;border-bottom:.2mm solid #e2e2e2}
+ .qnum{width:7mm;font-weight:bold}.bubble{width:5mm;height:5mm;border:1.1px solid #000;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:6.5pt;font-weight:bold}
  .marker{position:absolute;width:9mm;height:9mm;background:#000}.tl{top:2mm;left:2mm}.tr{top:2mm;right:2mm}.bl{bottom:2mm;left:2mm}.br{bottom:2mm;right:2mm}
- .foot{text-align:center;font-size:7pt;margin-top:3mm}
+ .foot{position:absolute;bottom:3mm;left:14mm;right:14mm;text-align:center;font-size:7pt}
 }
 </style>
 </head>
 <body>
-<header class="no-print"><div class="brand"><div class="logo">LM</div><div><h1>LJK MASTER</h1><small>Maker · Scanner · Rekap Nilai</small></div></div><div class="status" id="connectionStatus">Spreadsheet belum dihubungkan</div></header>
+<header class="no-print"><div class="brand"><div class="logo">LM</div><div><h1>LJK MASTER</h1><small>Maker · Scanner · Rekap Nilai</small></div></div><div class="status" id="connectionStatus">Menghubungkan...</div></header>
 <main class="wrap no-print">
  <div class="tabs">
   <button class="tab active" data-tab="dashboard">Dashboard</button><button class="tab" data-tab="maker">Buat LJK</button><button class="tab" data-tab="key">Kunci Jawaban</button><button class="tab" data-tab="scanner">Scanner Kamera</button><button class="tab" data-tab="results">Hasil & Rekap</button><button class="tab" data-tab="settings">Pengaturan</button>
  </div>
  <section id="dashboard" class="panel active">
   <div class="grid">
-   <div class="card span8"><h2>Selamat datang di LJK MASTER</h2><p class="muted">Buat lembar jawaban 50 soal, pindai menggunakan kamera, lalu simpan hasil koreksi ke Google Spreadsheet.</p><div class="actions"><button onclick="showTab('maker')">Buat / Cetak LJK</button><button class="secondary" onclick="showTab('scanner')">Mulai Scan</button></div></div>
+   <div class="card span8"><h2>Selamat datang di LJK MASTER</h2><p class="muted">Buat lembar jawaban dinamis (10–60 soal), pindai menggunakan kamera dengan koreksi sudut otomatis, lalu simpan hasil koreksi ke Google Spreadsheet.</p><div class="actions"><button onclick="showTab('maker')">Buat / Cetak LJK</button><button class="secondary" onclick="showTab('scanner')">Mulai Scan</button></div></div>
    <div class="card span4"><div class="muted">Hasil tersimpan</div><div class="metric" id="totalResults">0</div><div class="muted">data koreksi</div></div>
-   <div class="card span6"><h3>Alur penggunaan</h3><ol class="muted"><li>Hubungkan URL Google Apps Script.</li><li>Atur kunci jawaban.</li><li>Cetak LJK dari menu Buat LJK.</li><li>Isi bulatan dengan pensil 2B atau pulpen hitam.</li><li>Scan dengan kamera dari menu Scanner.</li><li>Periksa identitas dan hasil, lalu simpan.</li></ol></div>
-   <div class="card span6"><h3>Catatan scanner</h3><p class="muted">Letakkan satu lembar LJK pada permukaan datar, pencahayaan merata, dan seluruh empat kotak hitam terlihat di dalam bingkai kamera. Versi awal ini memakai panduan posisi kamera; hasil perlu diperiksa sebelum disimpan.</p><div class="notice">Gunakan LJK yang dicetak dari aplikasi ini. Perubahan ukuran cetak atau template lain dapat menyebabkan pembacaan tidak akurat.</div></div>
+   <div class="card span6"><h3>Alur penggunaan</h3><ol class="muted"><li>Pilih jumlah soal (10–60) & cetak LJK di menu <b>Buat LJK</b>.</li><li>Atur kunci jawaban pada menu <b>Kunci Jawaban</b>.</li><li>Peserta menghitamkan bulatan dengan pensil 2B atau spidol/pulpen hitam pekat.</li><li>Scan dengan kamera atau unggah foto pada menu <b>Scanner Kamera</b>.</li><li>Verifikasi titik deteksi & identitas, lalu simpan ke Spreadsheet.</li></ol></div>
+   <div class="card span6"><h3>Tips pemindaian akurat</h3><p class="muted">Pastikan kertas berada di atas alas yang kontras (meja gelap lebih baik) dan keempat kotak hitam di sudut kertas masuk ke dalam area kamera.</p><div class="notice">Sistem otomatis meluruskan kertas yang miring berdasarkan 4 penanda sudut hitam dan menampilkan kotak indikator hasil bacaan.</div></div>
   </div>
  </section>
  <section id="maker" class="panel">
-  <div class="grid"><div class="card span8"><h2>Pembuat LJK</h2><p class="muted">Template standar A4, 50 soal, pilihan A–E, dua kolom.</p><label>Nama ujian</label><input id="examName" value="UJIAN / EVALUASI"><label>Sekolah / penyelenggara</label><input id="schoolName" placeholder="Nama sekolah atau penyelenggara"><label>Petunjuk pengerjaan</label><input id="instructions" value="Hitamkan satu bulatan pada setiap nomor. Gunakan tanda silang atau arsiran penuh."><div class="actions"><button onclick="printLJK()">Cetak / Simpan PDF</button></div></div>
-  <div class="card span4"><h3>Format LJK</h3><div class="metric">50</div><div class="muted">Nomor soal</div><div class="metric">A–E</div><div class="muted">Pilihan jawaban</div><p class="muted">Identitas: Nama, NIS, Kelas</p></div></div>
+  <div class="grid"><div class="card span8"><h2>Pembuat LJK</h2><p class="muted">Template standar A4 dengan 4 penanda sudut otomatis, pilihan A–E.</p>
+   <label>Jumlah Soal (10 – 60)</label>
+   <select id="questionCount" onchange="syncQuestionCount(this.value)">
+    <option value="10">10 Soal</option><option value="15">15 Soal</option><option value="20">20 Soal</option><option value="25">25 Soal</option>
+    <option value="30">30 Soal</option><option value="35">35 Soal</option><option value="40">40 Soal</option><option value="45">45 Soal</option>
+    <option value="50" selected>50 Soal</option><option value="60">60 Soal</option>
+   </select>
+   <label>Nama ujian</label><input id="examName" value="UJIAN / EVALUASI">
+   <label>Sekolah / penyelenggara</label><input id="schoolName" placeholder="Nama sekolah atau penyelenggara">
+   <label>Petunjuk pengerjaan</label><input id="instructions" value="Hitamkan satu bulatan penuh pada setiap nomor menggunakan pensil 2B atau pulpen hitam.">
+   <div class="actions"><button onclick="printLJK()">Cetak / Simpan PDF</button></div></div>
+  <div class="card span4"><h3>Format LJK</h3><div class="metric" id="makerCountPreview">50</div><div class="muted">Nomor soal</div><div class="metric">A–E</div><div class="muted">Pilihan jawaban</div><p class="muted" style="margin-top:14px">4 Corner Markers aktif untuk koreksi kemiringan kamera otomatis.</p></div></div>
  </section>
  <section id="key" class="panel">
-  <div class="card"><h2>Kunci Jawaban</h2><p class="muted">Pilih jawaban benar untuk setiap nomor. Kunci disimpan di browser dan dapat disinkronkan ke Spreadsheet.</p><div id="answerKeyGrid" class="answerkey"></div><div class="actions"><button onclick="saveKey()">Simpan Kunci</button><button class="secondary" onclick="loadKey()">Muat Kunci</button></div><div id="keyMsg"></div></div>
+  <div class="card">
+   <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+    <div><h2>Kunci Jawaban (<span id="keyCountLabel">50</span> Soal)</h2><p class="muted">Pilih jawaban benar untuk setiap nomor. Kunci disimpan di browser dan Spreadsheet.</p></div>
+    <div style="width:160px"><label style="margin-top:0">Jumlah Soal</label><select id="keyQuestionCount" onchange="syncQuestionCount(this.value)">
+     <option value="10">10 Soal</option><option value="15">15 Soal</option><option value="20">20 Soal</option><option value="25">25 Soal</option>
+     <option value="30">30 Soal</option><option value="35">35 Soal</option><option value="40">40 Soal</option><option value="45">45 Soal</option>
+     <option value="50" selected>50 Soal</option><option value="60">60 Soal</option>
+    </select></div>
+   </div>
+   <div id="answerKeyGrid" class="answerkey" style="margin-top:12px"></div>
+   <div class="actions"><button onclick="saveKey()">Simpan Kunci</button><button class="secondary" onclick="loadKey()">Muat dari Spreadsheet</button></div><div id="keyMsg"></div>
+  </div>
  </section>
  <section id="scanner" class="panel">
   <div class="grid">
-   <div class="card span8"><h2>Scanner Kamera</h2><p class="muted">Arahkan kamera tegak lurus ke LJK. Usahakan kertas memenuhi bingkai dan empat penanda sudut terlihat.</p>
-    <video id="camera" autoplay playsinline></video><canvas id="captureCanvas" hidden></canvas><img id="captured" alt="Hasil tangkapan kamera">
-    <div class="actions"><button id="startCamera">Aktifkan Kamera</button><button id="takePhoto" disabled>Ambil Gambar</button><button id="retake" class="secondary" style="display:none">Ulangi</button></div>
-    <div id="scanMessage" class="muted" style="margin-top:10px">Kamera memerlukan izin akses dan website HTTPS.</div>
+   <div class="card span8"><h2>Scanner Kamera</h2><p class="muted">Arahkan kamera tegak lurus ke LJK. Pastikan 4 kotak hitam di sudut kertas terlihat jelas.</p>
+    <div class="cam-box" id="camBox"><video id="camera" autoplay playsinline></video><div class="cam-guide"></div></div>
+    <canvas id="captureCanvas" hidden></canvas><canvas id="warpedCanvas" hidden></canvas>
+    <img id="captured" alt="Hasil tangkapan kamera">
+    <div class="actions">
+     <button id="startCamera">Aktifkan Kamera</button>
+     <button id="takePhoto" disabled>Ambil Gambar</button>
+     <button id="retake" class="secondary" style="display:none">Ulangi</button>
+     <label for="uploadFile" class="secondary" style="margin:0;padding:11px 15px;border-radius:10px;cursor:pointer;background:#e8f0ed;color:var(--green);font-weight:700;display:inline-block">Upload Foto</label>
+     <input type="file" id="uploadFile" accept="image/*" hidden>
+    </div>
+    <div id="scanMessage" class="muted" style="margin-top:10px">Klik "Aktifkan Kamera" atau unggah foto LJK.</div>
    </div>
-   <div class="card span4"><h3>Data peserta</h3><label>Nama peserta</label><input id="studentName" placeholder="Nama lengkap"><label>NIS</label><input id="studentNis" placeholder="Nomor induk siswa"><label>Kelas</label><input id="studentClass" placeholder="Contoh: IX A"><label>Sekolah</label><input id="studentSchool" placeholder="Nama sekolah"><div class="notice" style="margin-top:14px">Identitas diketik operator pada versi awal. Pembacaan NIS tulisan tangan belum otomatis.</div></div>
-   <div class="card span12"><h3>Hasil pembacaan</h3><p class="muted">Setelah mengambil gambar, sistem membaca area jawaban berdasarkan posisi template. Periksa jawaban yang terdeteksi.</p><div id="scanOutput" class="muted">Belum ada gambar yang diproses.</div><div class="actions"><button id="saveResult" disabled>Simpan hasil ke Spreadsheet</button></div></div>
+   <div class="card span4"><h3>Data peserta</h3>
+    <label>Jumlah Soal LJK</label>
+    <select id="scanQuestionCount" onchange="syncQuestionCount(this.value)">
+     <option value="10">10 Soal</option><option value="15">15 Soal</option><option value="20">20 Soal</option><option value="25">25 Soal</option>
+     <option value="30">30 Soal</option><option value="35">35 Soal</option><option value="40">40 Soal</option><option value="45">45 Soal</option>
+     <option value="50" selected>50 Soal</option><option value="60">60 Soal</option>
+    </select>
+    <label>Nama peserta</label><input id="studentName" placeholder="Nama lengkap">
+    <label>NIS</label><input id="studentNis" placeholder="Nomor induk siswa">
+    <label>Kelas</label><input id="studentClass" placeholder="Contoh: X A">
+    <label>Sekolah</label><input id="studentSchool" placeholder="Nama sekolah">
+   </div>
+   <div class="card span12"><h3>Hasil pembacaan</h3><p class="muted">Periksa jawaban yang terdeteksi di bawah ini sebelum menyimpan.</p><div id="scanOutput" class="muted">Belum ada gambar yang diproses.</div><div class="actions"><button id="saveResult" disabled>Simpan hasil ke Spreadsheet</button></div></div>
   </div>
  </section>
- <section id="results" class="panel"><div class="card"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h2>Hasil Koreksi</h2><p class="muted">Data diambil dari Google Spreadsheet.</p></div><button onclick="refreshResults()">Muat Ulang</button></div><div style="overflow:auto;margin-top:12px"><table><thead><tr><th>Waktu</th><th>Nama</th><th>NIS</th><th>Kelas</th><th>Benar</th><th>Nilai</th></tr></thead><tbody id="resultsBody"><tr><td colspan="6">Belum dimuat.</td></tr></tbody></table></div></div></section>
- <section id="settings" class="panel"><div class="card"><h2>Pengaturan koneksi</h2><p class="muted">Masukkan URL Web App Google Apps Script setelah deployment.</p><label>URL Web App</label><input id="apiUrl" placeholder="https://script.google.com/macros/s/...../exec"><div class="actions"><button onclick="saveSettings()">Simpan & Tes Koneksi</button><button class="secondary" onclick="setupHint()">Petunjuk setup Spreadsheet</button></div><div id="settingsMsg"></div><hr style="border:0;border-top:1px solid var(--line);margin:20px 0"><h3>Informasi teknis</h3><p class="muted">Frontend statis dapat di-host di GitHub Pages. Data disimpan di Google Sheets melalui Google Apps Script. Jangan membagikan URL deployment dengan akses editor; gunakan deployment sebagai Web App dengan akses sesuai kebijakan sekolah.</p></div></section>
+ <section id="results" class="panel"><div class="card"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h2>Hasil Koreksi</h2><p class="muted">Data diambil dari Google Spreadsheet.</p></div><button onclick="refreshResults()">Muat Ulang</button></div><div style="overflow:auto;margin-top:12px"><table><thead><tr><th>Waktu</th><th>Nama</th><th>NIS</th><th>Kelas</th><th>Benar</th><th>Nilai</th></tr></thead><tbody id="resultsBody"><tr><td colspan="6">Memuat data...</td></tr></tbody></table></div></div></section>
+ <section id="settings" class="panel"><div class="card"><h2>Pengaturan koneksi</h2><p class="muted">URL Web App Google Apps Script.</p><label>URL Web App</label><input id="apiUrl" placeholder="https://script.google.com/macros/s/...../exec"><div class="actions"><button onclick="saveSettings()">Simpan & Tes Koneksi</button><button class="secondary" onclick="resetDefaultUrl()">Reset URL Default</button></div><div id="settingsMsg"></div></div></section>
 </main>
 <div id="ljkPrint">
  <div class="sheet"><i class="marker tl"></i><i class="marker tr"></i><i class="marker bl"></i><i class="marker br"></i>
   <h1 id="printExam">UJIAN / EVALUASI</h1><div class="sub" id="printSchool">LEMBAR JAWABAN KOMPUTER · 50 SOAL · PILIHAN A–E</div>
-  <div class="idgrid"><div>Nama: <span class="idline"></span></div><div>NIS: <span class="idline"></span></div><div>Kelas: <span class="idline"></span></div><div>No. Peserta: <span class="idline"></span></div></div>
-  <div class="instructions" id="printInstructions">Hitamkan satu bulatan pada setiap nomor. Gunakan tanda silang atau arsiran penuh.</div>
-  <div class="columns"><div id="questions1"></div><div id="questions2"></div></div><div class="foot">Pastikan identitas terisi. Jangan melipat atau merusak lembar jawaban.</div>
+  <div class="idgrid">
+   <div class="idrow"><span>Nama:</span><span class="idline"></span></div>
+   <div class="idrow"><span>NIS:</span><span class="idline"></span></div>
+   <div class="idrow"><span>Kelas:</span><span class="idline"></span></div>
+   <div class="idrow"><span>No. Peserta:</span><span class="idline"></span></div>
+  </div>
+  <div class="instructions" id="printInstructions">Hitamkan satu bulatan penuh pada setiap nomor menggunakan pensil 2B atau pulpen hitam.</div>
+  <div class="columns" id="printColumns"><div id="questions1"></div><div id="questions2"></div></div>
+  <div class="foot">Pastikan identitas terisi. Jangan melipat atau mencoret kotak hitam di sudut kertas.</div>
  </div>
 </div>
-<footer class="no-print">LJK MASTER · Versi awal 1.0 · Dibangun untuk kebutuhan ujian sekolah</footer>
+<footer class="no-print">LJK MASTER · Versi 2.0 Dinamis · Dibangun untuk kebutuhan ujian sekolah</footer>
+
 <script>
-const OPTIONS=['A','B','C','D','E'];let stream=null, capturedData=null, detectedAnswers=Array(50).fill(''), answerKey=JSON.parse(localStorage.getItem('ljkm_key')||'null')||Array(50).fill('');
-const $=id=>document.getElementById(id);
-function showTab(id){document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));if(id==='key')renderKey();}
-document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
-function buildPrint(){ $('printExam').textContent=$('examName').value||'UJIAN';$('printSchool').textContent=($('schoolName').value||'')+' · LEMBAR JAWABAN KOMPUTER · 50 SOAL · PILIHAN A–E';$('printInstructions').textContent=$('instructions').value;[1,2].forEach((col)=>{let start=col===1?1:26,end=col===1?25:50,html='';for(let n=start;n<=end;n++){html+=`<div class="qrow"><span class="qnum">${n}.</span>${OPTIONS.map(o=>`<span class="bubble">${o}</span>`).join('')}</div>`;}$('questions'+col).innerHTML=html;});}
-function printLJK(){buildPrint();window.print();}
-function renderKey(){ $('answerKeyGrid').innerHTML=answerKey.map((v,i)=>`<div><label style="margin-top:0">${i+1}</label><select data-q="${i}"><option value="">—</option>${OPTIONS.map(o=>`<option ${v===o?'selected':''}>${o}</option>`).join('')}</select></div>`).join('');}
-function readKey(){document.querySelectorAll('#answerKeyGrid select').forEach(s=>answerKey[+s.dataset.q]=s.value);}
-function saveKey(){readKey();localStorage.setItem('ljkm_key',JSON.stringify(answerKey));$('keyMsg').innerHTML='<p class="success">Kunci tersimpan di browser ini.</p>';apiCall('saveKey',{answers:answerKey}).then(()=>{$('keyMsg').innerHTML='<p class="success">Kunci tersimpan di browser dan Spreadsheet.</p>'}).catch(()=>{});}
-async function loadKey(){try{const r=await apiCall('getKey');if(r.answers?.length===50)answerKey=r.answers;}catch(e){}renderKey();$('keyMsg').textContent='Kunci dimuat.';}
-function saveSettings(){localStorage.setItem('ljkm_api',$('apiUrl').value.trim());$('settingsMsg').textContent='Menguji koneksi...';apiCall('ping').then(r=>{$('settingsMsg').innerHTML='<p class="success">'+(r.message||'Terhubung')+'</p>';$('connectionStatus').textContent='Spreadsheet terhubung';refreshResults()}).catch(e=>{$('settingsMsg').innerHTML='<p class="notice">Koneksi gagal: '+e.message+'</p>';$('connectionStatus').textContent='Koneksi gagal'});}
-function setupHint(){$('settingsMsg').innerHTML='<div class="notice">Buka file gas/Code.gs di folder proyek, salin ke script.google.com, jalankan fungsi setupSpreadsheet() satu kali, lalu Deploy → New deployment → Web app. Execute as: Me. Who has access: Anyone (atau sesuai kebijakan organisasi). Salin URL /exec ke kolom di atas.</div>';}
-function apiCall(action,data={}){return new Promise((resolve,reject)=>{const base=localStorage.getItem('ljkm_api')||'https://script.google.com/macros/s/AKfycbxhKgm1cmqpz7Y7wZCK9nbN1hl9gGjFxRF8UptnVggscwPrK19HRtFnKYZ4RWu3leyNtw/exec';if(!base)return reject(new Error('URL Apps Script belum diatur'));const cb='ljkcb_'+Date.now()+'_'+Math.floor(Math.random()*9999);const s=document.createElement('script');let done=false;const finish=(fn,v)=>{if(done)return;done=true;delete window[cb];s.remove();fn(v)};window[cb]=r=>{if(r.ok)finish(resolve,r);else finish(reject,new Error(r.error||'API error'))};const params=new URLSearchParams({action,callback:cb,payload:JSON.stringify(data)});s.src=base+'?'+params.toString();s.onerror=()=>finish(reject,new Error('Tidak dapat menghubungi Apps Script'));document.body.appendChild(s);setTimeout(()=>finish(reject,new Error('Waktu koneksi habis')),15000);});}
-async function refreshResults(){try{const r=await apiCall('getResults');const rows=r.results||[];$('totalResults').textContent=rows.length;$('resultsBody').innerHTML=rows.slice().reverse().map(x=>`<tr><td>${esc(x.timestamp||'')}</td><td>${esc(x.name||'')}</td><td>${esc(x.nis||'')}</td><td>${esc(x.className||'')}</td><td>${x.correct??''}/50</td><td><b>${x.score??''}</b></td></tr>`).join('')||'<tr><td colspan="6">Belum ada hasil.</td></tr>';}catch(e){$('resultsBody').innerHTML='<tr><td colspan="6">Gagal memuat: '+esc(e.message)+'</td></tr>';}}
-function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-$('startCamera').onclick=async()=>{try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false});$('camera').srcObject=stream;$('takePhoto').disabled=false;$('scanMessage').textContent='Kamera aktif. Sejajarkan kertas di tengah bingkai.';}catch(e){$('scanMessage').textContent='Tidak bisa membuka kamera: '+e.message+'. Pastikan HTTPS dan izin kamera aktif.';}};
-$('takePhoto').onclick=()=>{const v=$('camera'),c=$('captureCanvas'),ctx=c.getContext('2d');const vw=v.videoWidth,vh=v.videoHeight;if(!vw)return;const target=210/297;let sw=vw,sh=vh;if(vw/vh>target){sw=vh*target}else{sh=vw/target}const sx=(vw-sw)/2,sy=(vh-sh)/2;c.width=1000;c.height=1414;ctx.drawImage(v,sx,sy,sw,sh,0,0,c.width,c.height);capturedData=c.toDataURL('image/jpeg',.92);$('captured').src=capturedData;$('captured').style.display='block';v.style.display='none';$('retake').style.display='inline-block';$('scanMessage').textContent='Gambar diambil. Sistem sedang membaca area jawaban...';processOMR(c);};
-$('retake').onclick=()=>{$('captured').style.display='none';$('camera').style.display='block';$('retake').style.display='none';capturedData=null;$('saveResult').disabled=true;$('scanOutput').textContent='Ambil gambar untuk membaca jawaban.';};
-function processOMR(canvas){const ctx=canvas.getContext('2d',{willReadFrequently:true}),W=canvas.width,H=canvas.height;let answers=[],ambiguous=[]; // LJK geometry is relative to the printable template.
- // Question rows occupy the central body. Each half has 25 rows; each row has five evenly spaced bubbles.
- for(let q=0;q<50;q++){const col=q<25?0:1,row=q%25;const x0=col===0?W*.094:W*.550;const y0=H*.185;const dx=W*.0343,dy=H*.0280;let scores=[];for(let k=0;k<5;k++){const cx=Math.round(x0+k*dx),cy=Math.round(y0+row*dy);scores.push(sampleDarkness(ctx,cx,cy,Math.max(5,Math.round(W*.0065))));}
- const sorted=scores.map((v,i)=>({v,i})).sort((a,b)=>b.v-a.v);const chosen=sorted[0];const answer=chosen.v>0.19&&chosen.v-sorted[1].v>0.025?OPTIONS[chosen.i]:'';answers.push(answer);if(!answer)ambiguous.push(q+1);}
- detectedAnswers=answers;const key=answerKey;let correct=0,checked=0;answers.forEach((a,i)=>{if(key[i]){checked++;if(a===key[i])correct++;}});const score=checked?Math.round(correct/checked*100):null;
- $('scanOutput').innerHTML=`<div class="success">Pembacaan selesai. ${ambiguous.length} nomor kosong/tidak jelas. ${checked?`Skor sementara: ${score}/100 (${correct} benar dari ${checked} kunci terisi).`:'Atur kunci jawaban untuk menghitung nilai.'}</div><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:12px">${answers.map((a,i)=>`<label style="margin:0;border:1px solid var(--line);border-radius:7px;padding:6px;text-align:center">${i+1}<br><select data-scan="${i}" style="padding:4px;margin-top:3px"><option value="">-</option>${OPTIONS.map(o=>`<option ${a===o?'selected':''}>${o}</option>`).join('')}</select></label>`).join('')}</div>`;
- document.querySelectorAll('[data-scan]').forEach(s=>s.onchange=()=>detectedAnswers[+s.dataset.scan]=s.value);
- $('scanMessage').textContent='Periksa hasil deteksi dan koreksi pilihan yang keliru secara manual.';$('saveResult').disabled=false;
+const DEFAULT_API = 'https://script.google.com/macros/s/AKfycbxhKgm1cmqpz7Y7wZCK9nbN1hl9gGjFxRF8UptnVggscwPrK19HRtFnKYZ4RWu3leyNtw/exec';
+const OPTIONS = ['A','B','C','D','E'];
+let totalQuestions = Number(localStorage.getItem('ljkm_count')) || 50;
+let stream = null, capturedData = null;
+let answerKey = JSON.parse(localStorage.getItem('ljkm_key') || 'null') || Array(60).fill('');
+if (answerKey.length < 60) answerKey = answerKey.concat(Array(60 - answerKey.length).fill(''));
+let detectedAnswers = Array(totalQuestions).fill('');
+
+const $ = id => document.getElementById(id);
+
+function syncQuestionCount(val) {
+  totalQuestions = Number(val) || 50;
+  localStorage.setItem('ljkm_count', totalQuestions);
+  $('questionCount').value = totalQuestions;
+  $('keyQuestionCount').value = totalQuestions;
+  $('scanQuestionCount').value = totalQuestions;
+  $('makerCountPreview').textContent = totalQuestions;
+  $('keyCountLabel').textContent = totalQuestions;
+  renderKey();
+  buildPrint();
 }
-function sampleDarkness(ctx,cx,cy,r){const d=ctx.getImageData(Math.max(0,cx-r),Math.max(0,cy-r),r*2+1,r*2+1).data;let sum=0,n=0;for(let i=0;i<d.length;i+=4){sum+=(d[i]+d[i+1]+d[i+2])/3;n++;}return 1-sum/(n*255);}
-$('saveResult').onclick=async()=>{const key=answerKey;const valid=key.filter(Boolean).length;if(!valid){alert('Isi kunci jawaban terlebih dahulu.');return;}let correct=0,blank=0;detectedAnswers.forEach((a,i)=>{if(!a)blank++;if(key[i]&&a===key[i])correct++;});const score=Math.round(correct/valid*100);const payload={name:$('studentName').value,nis:$('studentNis').value,className:$('studentClass').value,school:$('studentSchool').value,answers:detectedAnswers,key,correct,blank,score,total:50};try{await apiCall('saveResult',payload);alert('Hasil berhasil disimpan. Nilai: '+score);refreshResults();}catch(e){alert('Gagal menyimpan: '+e.message);}};
-window.addEventListener('beforeunload',()=>{if(stream)stream.getTracks().forEach(t=>t.stop());});
-$('apiUrl').value=localStorage.getItem('ljkm_api')||'https://script.google.com/macros/s/AKfycbxhKgm1cmqpz7Y7wZCK9nbN1hl9gGjFxRF8UptnVggscwPrK19HRtFnKYZ4RWu3leyNtw/exec';renderKey();buildPrint();
+
+function showTab(id) {
+  document.querySelectorAll('.panel').forEach(x => x.classList.toggle('active', x.id === id));
+  document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x.dataset.tab === id));
+  if (id === 'key') renderKey();
+}
+document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
+
+function buildPrint() {
+  const n = totalQuestions;
+  $('printExam').textContent = $('examName').value || 'UJIAN';
+  $('printSchool').textContent = ($('schoolName').value ? $('schoolName').value + ' · ' : '') + `LEMBAR JAWABAN KOMPUTER · ${n} SOAL · PILIHAN A–E`;
+  $('printInstructions').textContent = $('instructions').value;
+
+  const colsEl = $('printColumns');
+  const q1 = $('questions1'), q2 = $('questions2');
+  q1.innerHTML = ''; q2.innerHTML = '';
+
+  if (n <= 25) {
+    colsEl.classList.add('single');
+    q2.style.display = 'none';
+    let html = '';
+    for (let i = 1; i <= n; i++) {
+      html += `<div class="qrow"><span class="qnum">${i}.</span>${OPTIONS.map(o => `<span class="bubble">${o}</span>`).join('')}</div>`;
+    }
+    q1.innerHTML = html;
+  } else {
+    colsEl.classList.remove('single');
+    q2.style.display = 'block';
+    const split = Math.ceil(n / 2);
+    let h1 = '', h2 = '';
+    for (let i = 1; i <= split; i++) {
+      h1 += `<div class="qrow"><span class="qnum">${i}.</span>${OPTIONS.map(o => `<span class="bubble">${o}</span>`).join('')}</div>`;
+    }
+    for (let i = split + 1; i <= n; i++) {
+      h2 += `<div class="qrow"><span class="qnum">${i}.</span>${OPTIONS.map(o => `<span class="bubble">${o}</span>`).join('')}</div>`;
+    }
+    q1.innerHTML = h1;
+    q2.innerHTML = h2;
+  }
+}
+
+function printLJK() { buildPrint(); window.print(); }
+
+function renderKey() {
+  const slice = answerKey.slice(0, totalQuestions);
+  $('answerKeyGrid').innerHTML = slice.map((v, i) => `<div><label style="margin-top:0">${i + 1}</label><select data-q="${i}"><option value="">—</option>${OPTIONS.map(o => `<option ${v === o ? 'selected' : ''}>${o}</option>`).join('')}</select></div>`).join('');
+}
+
+function readKey() {
+  document.querySelectorAll('#answerKeyGrid select').forEach(s => answerKey[+s.dataset.q] = s.value);
+}
+
+function saveKey() {
+  readKey();
+  localStorage.setItem('ljkm_key', JSON.stringify(answerKey));
+  const activeKey = answerKey.slice(0, totalQuestions);
+  $('keyMsg').innerHTML = '<p class="success">Kunci tersimpan di browser ini. Menyinkronkan ke Spreadsheet...</p>';
+  apiCall('saveKey', { answers: activeKey })
+    .then(r => { $('keyMsg').innerHTML = `<p class="success">${r.message || 'Kunci tersimpan di browser dan Spreadsheet.'}</p>`; })
+    .catch(e => { $('keyMsg').innerHTML = `<p class="notice">Tersimpan lokal, gagal sinkron Spreadsheet: ${e.message}</p>`; });
+}
+
+async function loadKey() {
+  $('keyMsg').textContent = 'Memuat kunci dari Spreadsheet...';
+  try {
+    const r = await apiCall('getKey');
+    if (Array.isArray(r.answers) && r.answers.length >= 10) {
+      r.answers.forEach((v, idx) => { if (idx < 60) answerKey[idx] = v; });
+      localStorage.setItem('ljkm_key', JSON.stringify(answerKey));
+      syncQuestionCount(r.answers.length);
+      $('keyMsg').innerHTML = `<p class="success">Berhasil memuat kunci (${r.answers.length} soal) dari Spreadsheet.</p>`;
+    } else {
+      $('keyMsg').innerHTML = '<p class="notice">Belum ada kunci tersimpan di Spreadsheet.</p>';
+    }
+  } catch (e) {
+    $('keyMsg').innerHTML = `<p class="notice">Gagal memuat: ${e.message}</p>`;
+  }
+}
+
+function saveSettings() {
+  localStorage.setItem('ljkm_api', $('apiUrl').value.trim());
+  testConnection();
+}
+
+function resetDefaultUrl() {
+  localStorage.setItem('ljkm_api', DEFAULT_API);
+  $('apiUrl').value = DEFAULT_API;
+  testConnection();
+}
+
+function testConnection() {
+  $('settingsMsg').textContent = 'Menguji koneksi...';
+  apiCall('ping')
+    .then(r => {
+      $('settingsMsg').innerHTML = `<p class="success">${r.message || 'Terhubung'} (${r.spreadsheet || ''})</p>`;
+      $('connectionStatus').textContent = 'Spreadsheet terhubung';
+      refreshResults();
+    })
+    .catch(e => {
+      $('settingsMsg').innerHTML = `<p class="notice">Koneksi gagal: ${e.message}</p>`;
+      $('connectionStatus').textContent = 'Koneksi gagal';
+    });
+}
+
+function apiCall(action, data = {}) {
+  return new Promise((resolve, reject) => {
+    const base = localStorage.getItem('ljkm_api') || DEFAULT_API;
+    if (!base) return reject(new Error('URL Apps Script belum diatur'));
+    const cb = 'ljkcb_' + Date.now() + '_' + Math.floor(Math.random() * 9999);
+    const s = document.createElement('script');
+    let done = false;
+    const finish = (fn, v) => { if (done) return; done = true; delete window[cb]; s.remove(); fn(v); };
+    window[cb] = r => { if (r.ok) finish(resolve, r); else finish(reject, new Error(r.error || 'API error')); };
+    const params = new URLSearchParams({ action, callback: cb, payload: JSON.stringify(data) });
+    s.src = base + '?' + params.toString();
+    s.onerror = () => finish(reject, new Error('Tidak dapat menghubungi Apps Script'));
+    document.body.appendChild(s);
+    setTimeout(() => finish(reject, new Error('Waktu koneksi habis')), 15000);
+  });
+}
+
+async function refreshResults() {
+  try {
+    const r = await apiCall('getResults');
+    const rows = r.results || [];
+    $('totalResults').textContent = rows.length;
+    $('resultsBody').innerHTML = rows.slice().reverse().map(x =>
+      `<tr><td>${esc(x.timestamp || '')}</td><td>${esc(x.name || '')}</td><td>${esc(x.nis || '')}</td><td>${esc(x.className || '')}</td><td>${x.correct ?? ''}/${x.total || 50}</td><td><b>${x.score ?? ''}</b></td></tr>`
+    ).join('') || '<tr><td colspan="6">Belum ada hasil.</td></tr>';
+  } catch (e) {
+    $('resultsBody').innerHTML = '<tr><td colspan="6">Gagal memuat: ' + esc(e.message) + '</td></tr>';
+  }
+}
+
+function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+// KAMERA & UPLOAD FOTO
+$('startCamera').onclick = async () => {
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' }, width: { ideal: 1920 }, height: { ideal: 1080 } }, audio: false });
+    $('camera').srcObject = stream;
+    $('camBox').style.display = 'block';
+    $('captured').style.display = 'none';
+    $('takePhoto').disabled = false;
+    $('scanMessage').textContent = 'Kamera aktif. Pastikan 4 kotak sudut hitam terlihat di dalam bingkai.';
+  } catch (e) {
+    $('scanMessage').textContent = 'Tidak bisa membuka kamera: ' + e.message;
+  }
+};
+
+$('takePhoto').onclick = () => {
+  const v = $('camera'), c = $('captureCanvas'), ctx = c.getContext('2d');
+  if (!v.videoWidth) return;
+  c.width = v.videoWidth;
+  c.height = v.videoHeight;
+  ctx.drawImage(v, 0, 0, c.width, c.height);
+  handleCapturedCanvas(c);
+};
+
+$('uploadFile').onchange = e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const img = new Image();
+  img.onload = () => {
+    const c = $('captureCanvas'), ctx = c.getContext('2d');
+    c.width = img.width;
+    c.height = img.height;
+    ctx.drawImage(img, 0, 0);
+    handleCapturedCanvas(c);
+  };
+  img.src = URL.createObjectURL(file);
+};
+
+$('retake').onclick = () => {
+  $('captured').style.display = 'none';
+  $('camBox').style.display = 'block';
+  $('retake').style.display = 'none';
+  capturedData = null;
+  $('saveResult').disabled = true;
+  $('scanOutput').textContent = 'Ambil gambar untuk membaca jawaban.';
+};
+
+function handleCapturedCanvas(srcCanvas) {
+  $('camBox').style.display = 'none';
+  $('retake').style.display = 'inline-block';
+  $('scanMessage').textContent = 'Mendeteksi penanda sudut & membaca area jawaban...';
+  processOMR(srcCanvas);
+}
+
+// DETEKSI 4 CORNER MARKERS & PERSPECTIVE WARP
+function findCornerMarkers(canvas) {
+  const w = 400, h = Math.round(canvas.height * (400 / canvas.width));
+  const tmp = document.createElement('canvas');
+  tmp.width = w; tmp.height = h;
+  const ctx = tmp.getContext('2d');
+  ctx.drawImage(canvas, 0, 0, w, h);
+  const img = ctx.getImageData(0, 0, w, h).data;
+
+  const gray = new Uint8Array(w * h);
+  let sum = 0;
+  for (let i = 0, p = 0; i < img.length; i += 4, p++) {
+    const g = (img[i] * 77 + img[i + 1] * 150 + img[i + 2] * 29) >> 8;
+    gray[p] = g;
+    sum += g;
+  }
+  const thresh = Math.min(130, (sum / (w * h)) * 0.65);
+
+  const zones = [
+    { name: 'tl', x0: 0, x1: Math.floor(w * 0.35), y0: 0, y1: Math.floor(h * 0.35), tx: 0, ty: 0 },
+    { name: 'tr', x0: Math.floor(w * 0.65), x1: w, y0: 0, y1: Math.floor(h * 0.35), tx: w, ty: 0 },
+    { name: 'bl', x0: 0, x1: Math.floor(w * 0.35), y0: Math.floor(h * 0.65), y1: h, tx: 0, ty: h },
+    { name: 'br', x0: Math.floor(w * 0.65), x1: w, y0: Math.floor(h * 0.65), y1: h, tx: w, ty: h }
+  ];
+
+  const scaleX = canvas.width / w, scaleY = canvas.height / h;
+  const corners = {};
+
+  for (const z of zones) {
+    let bestScore = -1, bestPt = null;
+    const step = 3;
+    for (let y = z.y0 + 6; y < z.y1 - 6; y += step) {
+      for (let x = z.x0 + 6; x < z.x1 - 6; x += step) {
+        if (gray[y * w + x] >= thresh) continue;
+        // Cek kepadatan blok 9x9 di sekitar titik (x,y)
+        let darkCount = 0;
+        for (let dy = -4; dy <= 4; dy++) {
+          for (let dx = -4; dx <= 4; dx++) {
+            if (gray[(y + dy) * w + (x + dx)] < thresh) darkCount++;
+          }
+        }
+        if (darkCount > 55) {
+          // Prioritaskan yang paling dekat ke sudut kanvas
+          const distCorner = Math.hypot(x - z.tx, y - z.ty);
+          const score = darkCount * 4 - distCorner;
+          if (score > bestScore) {
+            bestScore = score;
+            bestPt = { x: x * scaleX, y: y * scaleY };
+          }
+        }
+      }
+    }
+    if (!bestPt) return null;
+    corners[z.name] = bestPt;
+  }
+  return corners;
+}
+
+function warpPerspective(srcCanvas, corners, outW, outH) {
+  const dst = $('warpedCanvas');
+  dst.width = outW; dst.height = outH;
+  const dctx = dst.getContext('2d');
+  const sctx = srcCanvas.getContext('2d');
+  const srcData = sctx.getImageData(0, 0, srcCanvas.width, srcCanvas.height);
+  const dstData = dctx.createImageData(outW, outH);
+  const sw = srcCanvas.width, sh = srcCanvas.height;
+
+  // Pusat marker pada kanvas standar (margin 6mm + offset 6.5mm = ~3.1% lebar, ~2.2% tinggi)
+  const mx0 = outW * 0.031, mx1 = outW * 0.969;
+  const my0 = outH * 0.022, my1 = outH * 0.978;
+
+  for (let y = 0; y < outH; y++) {
+    const v = (y - my0) / (my1 - my0);
+    const lx = corners.tl.x + (corners.bl.x - corners.tl.x) * v;
+    const ly = corners.tl.y + (corners.bl.y - corners.tl.y) * v;
+    const rx = corners.tr.x + (corners.br.x - corners.tr.x) * v;
+    const ry = corners.tr.y + (corners.br.y - corners.tr.y) * v;
+
+    for (let x = 0; x < outW; x++) {
+      const u = (x - mx0) / (mx1 - mx0);
+      const sx = Math.round(lx + (rx - lx) * u);
+      const sy = Math.round(ly + (ry - ly) * u);
+      const di = (y * outW + x) * 4;
+      if (sx >= 0 && sx < sw && sy >= 0 && sy < sh) {
+        const si = (sy * sw + sx) * 4;
+        dstData.data[di] = srcData.data[si];
+        dstData.data[di + 1] = srcData.data[si + 1];
+        dstData.data[di + 2] = srcData.data[si + 2];
+        dstData.data[di + 3] = 255;
+      } else {
+        dstData.data[di] = dstData.data[di + 1] = dstData.data[di + 2] = 255;
+        dstData.data[di + 3] = 255;
+      }
+    }
+  }
+  dctx.putImageData(dstData, 0, 0);
+  return dst;
+}
+
+function processOMR(rawCanvas) {
+  const W = 1000, H = 1439; // Rasio proporsional sheet 198mm x 285mm
+  const corners = findCornerMarkers(rawCanvas);
+  let workCanvas, markerStatus = '';
+
+  if (corners) {
+    workCanvas = warpPerspective(rawCanvas, corners, W, H);
+    markerStatus = '4 penanda sudut terdeteksi (perspektif diluruskan otomatis).';
+  } else {
+    // Fallback crop tengah jika marker tidak tertangkap
+    workCanvas = $('warpedCanvas');
+    workCanvas.width = W; workCanvas.height = H;
+    const ctx = workCanvas.getContext('2d');
+    const target = W / H, vw = rawCanvas.width, vh = rawCanvas.height;
+    let sw = vw, sh = vh;
+    if (vw / vh > target) sw = vh * target; else sh = vw / target;
+    ctx.drawImage(rawCanvas, (vw - sw) / 2, (vh - sh) / 2, sw, sh, 0, 0, W, H);
+    markerStatus = 'Penanda sudut tidak lengkap, memakai pembacaan standar.';
+  }
+
+  const ctx = workCanvas.getContext('2d', { willReadFrequently: true });
+  const n = totalQuestions;
+  const split = n <= 25 ? n : Math.ceil(n / 2);
+
+  // Koordinat terkalibrasi terhadap .sheet (198mm x 285mm)
+  // Kolom 1 x0: padding 12mm + qnum 7mm + gap 2.4mm + radius 2.5mm = 23.9mm -> 23.9/198 = 0.1207
+  // Kolom 2 x0: 12mm + 84mm + 10mm + 7mm + 2.4mm + 2.5mm = 117.9mm -> 117.9/198 = 0.5955
+  // Jarak antar bulatan dx: 5mm + 2.4mm = 7.4mm -> 7.4/198 = 0.03737
+  // Baris pertama y0: ~54.5mm -> 54.5/285 = 0.1912
+  // Tinggi baris dy: 7.3mm -> 7.3/285 = 0.02561
+  const dx = W * 0.03737;
+  const dy = H * 0.02561;
+  const y0 = H * 0.1912;
+  const rSample = Math.max(5, Math.round(W * 0.0075));
+
+  let answers = [], ambiguous = [];
+
+  for (let q = 0; q < n; q++) {
+    const col = q < split ? 0 : 1;
+    const row = q < split ? q : (q - split);
+    const x0 = col === 0 ? W * 0.1207 : W * 0.5955;
+
+    let scores = [];
+    for (let k = 0; k < 5; k++) {
+      const cx = Math.round(x0 + k * dx);
+      const cy = Math.round(y0 + row * dy);
+      scores.push({ val: sampleDarkness(ctx, cx, cy, rSample), cx, cy, k });
+    }
+
+    const sorted = [...scores].sort((a, b) => b.val - a.val);
+    const chosen = sorted[0];
+    const isFilled = chosen.val > 0.22 && (chosen.val - sorted[1].val) > 0.035;
+    const answer = isFilled ? OPTIONS[chosen.k] : '';
+    answers.push(answer);
+    if (!answer) ambiguous.push(q + 1);
+
+    // Gambar indikator visual pada kanvas hasil
+    scores.forEach(s => {
+      ctx.lineWidth = 2;
+      if (isFilled && s.k === chosen.k) {
+        ctx.strokeStyle = '#16a34a';
+        ctx.strokeRect(s.cx - rSample - 2, s.cy - rSample - 2, (rSample + 2) * 2, (rSample + 2) * 2);
+      } else {
+        ctx.strokeStyle = 'rgba(234, 179, 8, 0.45)';
+        ctx.strokeRect(s.cx - 3, s.cy - 3, 6, 6);
+      }
+    });
+  }
+
+  $('captured').src = workCanvas.toDataURL('image/jpeg', 0.92);
+  $('captured').style.display = 'block';
+
+  detectedAnswers = answers;
+  const key = answerKey.slice(0, n);
+  let correct = 0, checked = 0;
+  answers.forEach((a, i) => {
+    if (key[i]) { checked++; if (a === key[i]) correct++; }
+  });
+  const score = checked ? Math.round((correct / checked) * 100) : null;
+
+  $('scanOutput').innerHTML = `
+    <div class="success"><b>${markerStatus}</b><br>${ambiguous.length} nomor kosong/ragu. ${checked ? `Skor sementara: <b>${score}/100</b> (${correct} benar dari ${checked} kunci terisi).` : 'Atur kunci jawaban untuk menghitung nilai.'}</div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:12px">
+      ${answers.map((a, i) => `<label style="margin:0;border:1px solid var(--line);border-radius:7px;padding:6px;text-align:center;background:${key[i] ? (a === key[i] ? '#eefaf3' : (a ? '#fef2f2' : '#fff')) : '#fff'}">${i + 1}<br><select data-scan="${i}" style="padding:4px;margin-top:3px"><option value="">-</option>${OPTIONS.map(o => `<option ${a === o ? 'selected' : ''}>${o}</option>`).join('')}</select></label>`).join('')}
+    </div>`;
+
+  document.querySelectorAll('[data-scan]').forEach(s => s.onchange = () => detectedAnswers[+s.dataset.scan] = s.value);
+  $('scanMessage').textContent = 'Periksa kotak hijau pada gambar dan koreksi pilihan jika ada yang meleset.';
+  $('saveResult').disabled = false;
+}
+
+function sampleDarkness(ctx, cx, cy, r) {
+  const d = ctx.getImageData(Math.max(0, cx - r), Math.max(0, cy - r), r * 2 + 1, r * 2 + 1).data;
+  let sum = 0, n = 0;
+  for (let i = 0; i < d.length; i += 4) {
+    sum += (d[i] + d[i + 1] + d[i + 2]) / 3;
+    n++;
+  }
+  return 1 - sum / (n * 255);
+}
+
+$('saveResult').onclick = async () => {
+  const n = totalQuestions;
+  const key = answerKey.slice(0, n);
+  const valid = key.filter(Boolean).length;
+  if (!valid) { alert('Isi kunci jawaban terlebih dahulu.'); return; }
+  if (!$('studentNis').value.trim()) { alert('NIS peserta wajib diisi.'); return; }
+
+  let correct = 0, blank = 0;
+  detectedAnswers.slice(0, n).forEach((a, i) => {
+    if (!a) blank++;
+    if (key[i] && a === key[i]) correct++;
+  });
+  const score = Math.round((correct / valid) * 100);
+
+  const payload = {
+    name: $('studentName').value,
+    nis: $('studentNis').value.trim(),
+    className: $('studentClass').value,
+    school: $('studentSchool').value,
+    answers: detectedAnswers.slice(0, n),
+    key,
+    correct,
+    blank,
+    score,
+    total: n
+  };
+
+  $('saveResult').disabled = true;
+  try {
+    await apiCall('saveResult', payload);
+    alert(`Hasil berhasil disimpan (${n} soal). Nilai: ${score}`);
+    refreshResults();
+  } catch (e) {
+    alert('Gagal menyimpan: ' + e.message);
+  } finally {
+    $('saveResult').disabled = false;
+  }
+};
+
+window.addEventListener('beforeunload', () => {
+  if (stream) stream.getTracks().forEach(t => t.stop());
+});
+
+// Inisialisasi awal
+if (!localStorage.getItem('ljkm_api')) localStorage.setItem('ljkm_api', DEFAULT_API);
+$('apiUrl').value = localStorage.getItem('ljkm_api');
+syncQuestionCount(totalQuestions);
+testConnection();
 </script>
-</body></html>
+</body>
+</html>
